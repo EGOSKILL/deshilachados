@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Cuenta · Deshilachados</title>
+<meta name="description" content="Tu código 2x1 y las promociones activas de Deshilachados.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://www.deshilachados.com/mi-cuenta">
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#B03A2E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--rojo:#B03A2E;--rojo-d:#8C2D22;--brasa:#D4881F;--carbon:#2B2622;--pan:#EFE6D3;--hueso:#FAF6EE;--linea:#E3D6BD;--gris:#7A6A55;--r:16px}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--hueso);color:var(--carbon);font-family:"Inter",system-ui,Arial,sans-serif;line-height:1.55;min-height:100vh}
+  header{background:var(--carbon);text-align:center;padding:22px 20px}
+  .logo{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:1.5rem;color:var(--hueso)}
+  .logo b{color:var(--brasa)}
+  .logo .s{display:block;font-family:"Inter";font-size:.66rem;letter-spacing:.22em;color:var(--brasa);margin-top:3px;font-weight:600}
+  .wrap{max-width:560px;margin:0 auto;padding:40px 20px 70px}
+  h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(1.8rem,5vw,2.4rem);letter-spacing:-.01em;margin:0 0 10px}
+  .lede{color:var(--gris);font-size:1.05rem;margin:0 0 26px}
+  .card{background:#fff;border:1px solid var(--linea);border-radius:var(--r);padding:26px;margin:16px 0}
+  input[type=email]{width:100%;border:1.5px solid var(--linea);border-radius:12px;padding:14px 16px;font-family:inherit;font-size:1rem;background:var(--hueso);margin-bottom:12px}
+  input[type=email]:focus{outline:none;border-color:var(--brasa)}
+  .btn{display:inline-block;width:100%;text-align:center;background:var(--rojo);color:#fff;border:none;font-family:inherit;font-weight:700;font-size:1.05rem;padding:15px 24px;border-radius:999px;cursor:pointer;transition:.15s;text-decoration:none}
+  .btn:hover{background:var(--rojo-d)} .btn:disabled{opacity:.6;cursor:default}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+  .msg{text-align:center;color:var(--gris);margin-top:14px;display:none} .msg.show{display:block}
+  .codebox{background:var(--pan);border:2px dashed var(--rojo);border-radius:14px;padding:24px;text-align:center}
+  .codebox .k{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--rojo-d);font-weight:700}
+  .codebox .code{font-family:"Fraunces",Georgia,serif;font-size:2rem;font-weight:700;color:var(--rojo);letter-spacing:1px;margin:8px 0 4px}
+  .codebox .desc{font-size:13px;color:var(--gris)}
+  .badge{display:inline-block;font-size:12px;font-weight:700;padding:4px 12px;border-radius:999px;margin-top:10px}
+  .badge.ok{background:#e7f3e8;color:#2e7d32} .badge.used{background:#f3e7e7;color:#8C2D22}
+  h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.4rem;margin:34px 0 6px}
+  .promo{border-bottom:1px solid var(--linea);padding:16px 0}
+  .promo:last-child{border-bottom:none}
+  .promo .t{font-weight:700;font-size:1.05rem}
+  .promo .d{color:var(--gris);font-size:.95rem;margin-top:3px}
+  .promo .c{display:inline-block;margin-top:8px;font-family:"Fraunces",Georgia,serif;font-weight:700;color:var(--rojo);border:1px dashed var(--rojo);border-radius:8px;padding:3px 10px;font-size:.95rem}
+  .center{text-align:center} .mut{color:var(--gris);font-size:.9rem}
+  a.link{color:var(--rojo);font-weight:600;text-decoration:none}
+  .hide{display:none}
+  footer{background:var(--pan);text-align:center;padding:20px;color:var(--gris);font-size:.85rem}
+  .spin{text-align:center;padding:40px;color:var(--gris)}
+</style>
+</head>
+<body>
+<header><div class="logo">DESHILA<b>CHADOS</b><span class="s">SÁNDWICHES · MADRID</span></div></header>
+
+<div class="wrap">
+  <!-- Estado de carga -->
+  <div id="loading" class="spin hide">Cargando tu cuenta…</div>
+
+  <!-- Estado: pedir enlace -->
+  <div id="login">
+    <h1>Mi Cuenta</h1>
+    <p class="lede">Pon tu email y te enviamos un enlace para entrar. Sin contraseñas.</p>
+    <div class="card">
+      <form id="lf" novalidate>
+        <input type="email" id="email" placeholder="tu@email.com" aria-label="Tu email" required>
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button class="btn" type="submit" id="lb">Enviar mi enlace de acceso</button>
+      </form>
+      <p class="msg" id="lmsg">Si tu email está en la lista, te hemos enviado un enlace de acceso. Revisa tu bandeja (y spam).</p>
+    </div>
+    <p class="center mut">¿Aún no estás apuntado? <a class="link" href="/">Apúntate aquí</a> y llévate un 2x1.</p>
+  </div>
+
+  <!-- Estado: panel -->
+  <div id="dash" class="hide">
+    <h1>Hola 👋</h1>
+    <p class="lede" id="dashsub">Este es tu espacio en Deshilachados.</p>
+
+    <div id="codewrap" class="card">
+      <div class="codebox">
+        <div class="k">Tu 2x1 de bienvenida</div>
+        <div class="code" id="ucode">—</div>
+        <div class="desc">Enséñalo al pedir. 2 sándwiches al precio de 1.</div>
+        <div id="ubadge"></div>
+      </div>
+    </div>
+
+    <h2>Promos activas</h2>
+    <div class="card" id="promos"><p class="mut">No hay promos activas ahora mismo.</p></div>
+
+    <p class="center mut" style="margin-top:24px"><a class="link" href="/">← Volver a deshilachados.com</a></p>
+  </div>
+
+  <!-- Estado: enlace inválido/caducado -->
+  <div id="expired" class="hide center">
+    <h1>Enlace no válido</h1>
+    <p class="lede">Este enlace ha caducado o no es correcto. Pide uno nuevo con tu email.</p>
+    <p><a class="btn" href="/mi-cuenta" style="max-width:280px;margin:0 auto">Pedir un enlace nuevo</a></p>
+  </div>
+</div>
+
+<footer>@deshilachados.madrid · Madrid · Se deshace solo.</footer>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  var token=new URLSearchParams(location.search).get('token');
+
+  function show(which){ ['loading','login','dash','expired'].forEach(function(s){ $(s).classList.toggle('hide', s!==which); }); }
+
+  // --- Estado panel (hay token) ---
+  if(token){
+    show('loading');
+    fetch('/api/account',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:token})})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(!d||!d.ok){ show('expired'); return; }
+        // código personal
+        if(d.promo_code){
+          $('ucode').textContent=d.promo_code;
+          $('ubadge').innerHTML = d.redeemed
+            ? '<span class="badge used">Ya canjeado</span>'
+            : '<span class="badge ok">Disponible</span>';
+        } else {
+          $('codewrap').classList.add('hide');
+        }
+        // promos activas
+        if(d.promos && d.promos.length){
+          $('promos').innerHTML = d.promos.map(function(p){
+            return '<div class="promo"><div class="t">'+esc(p.title)+'</div>'+
+              (p.description?'<div class="d">'+esc(p.description)+'</div>':'')+
+              (p.code?'<div class="c">'+esc(p.code)+'</div>':'')+'</div>';
+          }).join('');
+        }
+        show('dash');
+      })
+      .catch(function(){ show('expired'); });
+    return;
+  }
+
+  // --- Estado pedir enlace ---
+  show('login');
+  var f=$('lf');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var inp=$('email'); var email=(inp.value||'').trim();
+    if(!email||email.indexOf('@')<0){ inp.focus(); inp.style.borderColor='#B03A2E'; return; }
+    var btn=$('lb'); btn.disabled=true; btn.textContent='Enviando…';
+    var hp=f.querySelector('input[name=website]');
+    fetch('/api/account-login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,website:hp?hp.value:''})})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        f.style.display='none'; $('lmsg').classList.add('show');
+      })
+      .catch(function(){ btn.disabled=false; btn.textContent='Enviar mi enlace de acceso'; inp.style.borderColor='#B03A2E'; });
+  });
+
+  function esc(t){ var d=document.createElement('div'); d.textContent=t==null?'':String(t); return d.innerHTML; }
+})();
+</script>
+</body>
+</html>

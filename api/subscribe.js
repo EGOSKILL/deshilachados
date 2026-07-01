@@ -134,6 +134,7 @@ function welcomeEmail(code, site) {
 
         <tr><td style="background:#EFE6D3;padding:18px 32px;text-align:center">
           <div style="font-size:12px;color:#7A6A55">@deshilachados.madrid · Madrid</div>
+          <div style="font-size:12px;margin-top:8px"><a href="${site}/mi-cuenta" style="color:#B03A2E;text-decoration:none;font-weight:bold">Ver mi cuenta</a></div>
           <div style="font-size:11px;color:#7A6A55;margin-top:6px">Válido en la primera compra. Un uso por persona. Sujeto a la apertura de nuestros locales.</div>
         </td></tr>
       </table>
