@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mi Cuenta · Deshilachados</title>
-<meta name="description" content="Tu código 2x1 y las promociones activas de Deshilachados.">
+<meta name="description" content="Tu código 2x1, tus sellos y las promociones activas de Deshilachados.">
 <meta name="robots" content="noindex,nofollow">
 <link rel="canonical" href="https://www.deshilachados.com/mi-cuenta">
 <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
@@ -25,8 +25,8 @@
   h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(1.8rem,5vw,2.4rem);letter-spacing:-.01em;margin:0 0 10px}
   .lede{color:var(--gris);font-size:1.05rem;margin:0 0 26px}
   .card{background:#fff;border:1px solid var(--linea);border-radius:var(--r);padding:26px;margin:16px 0}
-  input[type=email]{width:100%;border:1.5px solid var(--linea);border-radius:12px;padding:14px 16px;font-family:inherit;font-size:1rem;background:var(--hueso);margin-bottom:12px}
-  input[type=email]:focus{outline:none;border-color:var(--brasa)}
+  input[type=email],input[type=text]{width:100%;border:1.5px solid var(--linea);border-radius:12px;padding:14px 16px;font-family:inherit;font-size:1rem;background:var(--hueso);margin-bottom:12px}
+  input:focus{outline:none;border-color:var(--brasa)}
   .btn{display:inline-block;width:100%;text-align:center;background:var(--rojo);color:#fff;border:none;font-family:inherit;font-weight:700;font-size:1.05rem;padding:15px 24px;border-radius:999px;cursor:pointer;transition:.15s;text-decoration:none}
   .btn:hover{background:var(--rojo-d)} .btn:disabled{opacity:.6;cursor:default}
   .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
@@ -44,17 +44,28 @@
   .promo .d{color:var(--gris);font-size:.95rem;margin-top:3px}
   .promo .c{display:inline-block;margin-top:8px;font-family:"Fraunces",Georgia,serif;font-weight:700;color:var(--rojo);border:1px dashed var(--rojo);border-radius:8px;padding:3px 10px;font-size:.95rem}
   .center{text-align:center} .mut{color:var(--gris);font-size:.9rem}
-  a.link{color:var(--rojo);font-weight:600;text-decoration:none}
+  a.link{color:var(--rojo);font-weight:600;text-decoration:none;cursor:pointer}
   .hide{display:none}
   footer{background:var(--pan);text-align:center;padding:20px;color:var(--gris);font-size:.85rem}
   .spin{text-align:center;padding:40px;color:var(--gris)}
+  /* Tarjeta de sellos */
+  .stampcard{background:var(--carbon);color:var(--hueso);border-radius:var(--r);padding:26px;text-align:center}
+  .stampcard .h{font-family:"Fraunces",Georgia,serif;font-size:1.35rem;font-weight:700;margin-bottom:2px}
+  .stampcard .s{color:#d9cebc;font-size:.9rem;margin-bottom:18px}
+  .sdots{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+  .sdot{width:36px;height:36px;border-radius:50%;border:2px solid #5a524a;display:flex;align-items:center;justify-content:center;font-weight:700;color:#8a8177;font-size:.82rem}
+  .sdot.on{background:var(--brasa);border-color:var(--brasa);color:var(--carbon)}
+  .sdot.gift{border-color:var(--brasa);color:var(--brasa);font-size:1rem}
+  .scount{margin-top:16px;color:#efe2cf;font-weight:600}
+  .sfree{background:rgba(212,136,31,.16);border:1px solid var(--brasa);color:var(--brasa);border-radius:10px;padding:12px;margin-top:14px;font-weight:700}
+  .sshow{margin-top:16px;font-size:.85rem;color:#c9bda9}
+  .sshow b{color:var(--brasa);font-family:"Fraunces",Georgia,serif;letter-spacing:1px}
 </style>
 </head>
 <body>
 <header><div class="logo">DESHILA<b>CHADOS</b><span class="s">SÁNDWICHES · MADRID</span></div></header>
 
 <div class="wrap">
-  <!-- Estado de carga -->
   <div id="loading" class="spin hide">Cargando tu cuenta…</div>
 
   <!-- Estado: pedir enlace -->
@@ -70,13 +81,34 @@
       <p class="msg" id="lmsg">Si tu email está en la lista, te hemos enviado un enlace de acceso. Revisa tu bandeja (y spam).</p>
     </div>
     <p class="center mut">¿Aún no estás apuntado? <a class="link" href="/">Apúntate aquí</a> y llévate un 2x1.</p>
+
+    <!-- Consulta rápida de sellos (sin cuenta) -->
+    <p class="center mut" style="margin-top:20px">¿Solo quieres ver tus sellos? <a class="link" id="scLink">Consulta con tu código</a></p>
+    <div class="card hide" id="scBox">
+      <input type="text" id="scCode" placeholder="Tu código (p. ej. DS-XXXXX)" autocomplete="off" style="text-transform:uppercase;text-align:center;letter-spacing:1px">
+      <button class="btn" id="scBtn">Ver mis sellos</button>
+      <div id="scResult" style="margin-top:16px"></div>
+    </div>
   </div>
 
   <!-- Estado: panel -->
   <div id="dash" class="hide">
     <h1>Hola 👋</h1>
-    <p class="lede" id="dashsub">Este es tu espacio en Deshilachados.</p>
+    <p class="lede">Este es tu espacio en Deshilachados.</p>
 
+    <!-- Tarjeta de sellos -->
+    <div id="loyaltywrap" class="card hide" style="padding:0;border:none;background:transparent">
+      <div class="stampcard">
+        <div class="h">Tu tarjeta de sellos</div>
+        <div class="s">Cómete 10 y el <b style="color:var(--brasa)">11 es gratis</b>.</div>
+        <div class="sdots" id="l_dots"></div>
+        <div class="scount" id="l_count"></div>
+        <div class="sfree hide" id="l_free"></div>
+        <div class="sshow" id="l_show"></div>
+      </div>
+    </div>
+
+    <!-- Código 2x1 -->
     <div id="codewrap" class="card">
       <div class="codebox">
         <div class="k">Tu 2x1 de bienvenida</div>
@@ -92,7 +124,7 @@
     <p class="center mut" style="margin-top:24px"><a class="link" href="/">← Volver a deshilachados.com</a></p>
   </div>
 
-  <!-- Estado: enlace inválido/caducado -->
+  <!-- Estado: enlace inválido -->
   <div id="expired" class="hide center">
     <h1>Enlace no válido</h1>
     <p class="lede">Este enlace ha caducado o no es correcto. Pide uno nuevo con tu email.</p>
@@ -106,26 +138,38 @@
 (function(){
   var $=function(id){return document.getElementById(id);};
   var token=new URLSearchParams(location.search).get('token');
-
+  var GOAL=10;
   function show(which){ ['loading','login','dash','expired'].forEach(function(s){ $(s).classList.toggle('hide', s!==which); }); }
+  function esc(t){ var d=document.createElement('div'); d.textContent=t==null?'':String(t); return d.innerHTML; }
 
-  // --- Estado panel (hay token) ---
+  function renderStamps(container, countEl, freeEl, loyalty){
+    var dots=''; for(var i=1;i<=GOAL;i++){ dots+='<div class="sdot'+(i<=loyalty.stamps?' on':'')+'">'+i+'</div>'; }
+    dots+='<div class="sdot gift" title="gratis">🎁</div>';
+    container.innerHTML=dots;
+    var faltan=GOAL-loyalty.stamps;
+    countEl.textContent = loyalty.stamps>0 ? (loyalty.stamps+' / '+GOAL+' · te faltan '+faltan) : ('Aún no tienes sellos — ¡a por el primero!');
+    if(freeEl){
+      if(loyalty.free_available>0){ freeEl.classList.remove('hide'); freeEl.textContent='🎁 ¡Tienes '+loyalty.free_available+' sándwich(es) gratis! Enséñalo al pedir.'; }
+      else freeEl.classList.add('hide');
+    }
+  }
+
+  // --- Panel (token) ---
   if(token){
     show('loading');
     fetch('/api/account',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:token})})
       .then(function(r){return r.json();})
       .then(function(d){
         if(!d||!d.ok){ show('expired'); return; }
-        // código personal
         if(d.promo_code){
           $('ucode').textContent=d.promo_code;
-          $('ubadge').innerHTML = d.redeemed
-            ? '<span class="badge used">Ya canjeado</span>'
-            : '<span class="badge ok">Disponible</span>';
-        } else {
-          $('codewrap').classList.add('hide');
+          $('ubadge').innerHTML = d.redeemed ? '<span class="badge used">Ya canjeado</span>' : '<span class="badge ok">Disponible</span>';
+        } else { $('codewrap').classList.add('hide'); }
+        if(d.loyalty){
+          renderStamps($('l_dots'), $('l_count'), $('l_free'), d.loyalty);
+          $('l_show').innerHTML='Muestra este código en la barra para sumar sellos: <b>'+esc(d.loyalty.code)+'</b>';
+          $('loyaltywrap').classList.remove('hide');
         }
-        // promos activas
         if(d.promos && d.promos.length){
           $('promos').innerHTML = d.promos.map(function(p){
             return '<div class="promo"><div class="t">'+esc(p.title)+'</div>'+
@@ -139,7 +183,7 @@
     return;
   }
 
-  // --- Estado pedir enlace ---
+  // --- Pedir enlace ---
   show('login');
   var f=$('lf');
   f.addEventListener('submit',function(e){
@@ -150,13 +194,31 @@
     var hp=f.querySelector('input[name=website]');
     fetch('/api/account-login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,website:hp?hp.value:''})})
       .then(function(r){return r.json();})
-      .then(function(d){
-        f.style.display='none'; $('lmsg').classList.add('show');
-      })
+      .then(function(){ f.style.display='none'; $('lmsg').classList.add('show'); })
       .catch(function(){ btn.disabled=false; btn.textContent='Enviar mi enlace de acceso'; inp.style.borderColor='#B03A2E'; });
   });
 
-  function esc(t){ var d=document.createElement('div'); d.textContent=t==null?'':String(t); return d.innerHTML; }
+  // --- Consulta pública de sellos ---
+  $('scLink').onclick=function(){ $('scBox').classList.toggle('hide'); if(!$('scBox').classList.contains('hide')) $('scCode').focus(); };
+  $('scBtn').onclick=function(){
+    var code=($('scCode').value||'').trim().toUpperCase();
+    if(!code){ $('scCode').focus(); return; }
+    $('scResult').innerHTML='<p class="mut center">Buscando…</p>';
+    fetch('/api/account',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d && d.ok && d.found && d.loyalty){
+          var dots=''; for(var i=1;i<=GOAL;i++){ dots+='<div class="sdot'+(i<=d.loyalty.stamps?' on':'')+'" style="width:30px;height:30px;font-size:.72rem">'+i+'</div>'; }
+          var faltan=GOAL-d.loyalty.stamps;
+          var free=d.loyalty.free_available>0?'<div class="sfree" style="margin-top:12px">🎁 ¡Tienes '+d.loyalty.free_available+' gratis!</div>':'';
+          $('scResult').innerHTML='<div class="sdots" style="gap:7px">'+dots+'</div><p class="center" style="margin-top:12px;color:var(--carbon);font-weight:600">'+d.loyalty.stamps+' / '+GOAL+' · te faltan '+faltan+'</p>'+free;
+        } else {
+          $('scResult').innerHTML='<p class="mut center">No encontramos esa tarjeta. Revisa el código.</p>';
+        }
+      })
+      .catch(function(){ $('scResult').innerHTML='<p class="mut center">Error. Inténtalo de nuevo.</p>'; });
+  };
+  $('scCode').addEventListener('keydown',function(e){ if(e.key==='Enter') $('scBtn').click(); });
 })();
 </script>
 </body>

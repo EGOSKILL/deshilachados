@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel · Sellos · Deshilachados</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#2B2622">
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--rojo:#B03A2E;--rojo-d:#8C2D22;--brasa:#D4881F;--carbon:#2B2622;--pan:#EFE6D3;--hueso:#FAF6EE;--linea:#E3D6BD;--gris:#7A6A55;--verde:#2e7d32}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--carbon);color:var(--hueso);font-family:"Inter",system-ui,Arial,sans-serif;min-height:100vh}
+  .wrap{max-width:520px;margin:0 auto;padding:22px 18px 60px}
+  .logo{text-align:center;font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:1.35rem;padding:6px 0 2px}
+  .logo b{color:var(--brasa)} .tag{text-align:center;font-size:.7rem;letter-spacing:.2em;color:var(--brasa);margin-bottom:18px}
+  .card{background:#332d28;border:1px solid #4a423b;border-radius:16px;padding:22px;margin:14px 0}
+  label{display:block;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--brasa);font-weight:700;margin-bottom:8px}
+  input{width:100%;font-family:inherit;font-size:1.5rem;font-weight:700;text-align:center;letter-spacing:2px;padding:16px;border-radius:12px;border:2px solid #4a423b;background:#221e1a;color:#fff;text-transform:uppercase}
+  input::placeholder{color:#6b6158;letter-spacing:1px;font-weight:400}
+  input:focus{outline:none;border-color:var(--brasa)}
+  .btn{display:block;width:100%;font-family:inherit;font-weight:800;font-size:1.15rem;padding:18px;border-radius:14px;border:none;cursor:pointer;margin-top:12px;transition:.12s}
+  .btn:active{transform:scale(.985)}
+  .btn.pri{background:var(--brasa);color:var(--carbon)} .btn.pri:active{background:#c07a15}
+  .btn.stamp{background:var(--rojo);color:#fff;font-size:1.4rem;padding:24px} .btn.stamp:active{background:var(--rojo-d)}
+  .btn.free{background:var(--verde);color:#fff}
+  .btn.ghost{background:transparent;border:2px solid #4a423b;color:var(--hueso);font-size:1rem;padding:14px}
+  .btn:disabled{opacity:.5;cursor:default}
+  .dots{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:6px 0 4px}
+  .dot{width:38px;height:38px;border-radius:50%;border:2px solid #5a524a;display:flex;align-items:center;justify-content:center;font-weight:800;color:#5a524a;font-size:.9rem}
+  .dot.on{background:var(--brasa);border-color:var(--brasa);color:var(--carbon)}
+  .cardcode{text-align:center;font-family:"Fraunces",Georgia,serif;font-size:2rem;font-weight:800;color:var(--brasa);letter-spacing:2px;margin:2px 0}
+  .count{text-align:center;font-size:1rem;color:#d9cebc;margin:8px 0 4px}
+  .free-badge{background:rgba(46,125,50,.16);border:1px solid var(--verde);color:#9fe0a3;border-radius:10px;padding:12px;text-align:center;font-weight:700;margin-top:12px}
+  .msg{text-align:center;margin-top:12px;font-weight:700;min-height:22px}
+  .msg.err{color:#f0a3a3} .msg.ok{color:#9fe0a3}
+  .hide{display:none}
+  .sub{color:#a99e8f;font-size:.85rem;text-align:center;margin-top:10px}
+  .logout{text-align:center;margin-top:26px}
+  .logout a{color:#a99e8f;font-size:.85rem;cursor:pointer;text-decoration:underline}
+  .flash{position:fixed;inset:0;background:var(--verde);display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;font-weight:800;z-index:99;opacity:0;pointer-events:none;transition:opacity .2s}
+  .flash.show{opacity:1} .flash .big{font-size:3rem} .flash .t{font-size:1.5rem;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="flash" id="flash"><div class="big">🎉</div><div class="t">¡Sándwich gratis ganado!</div></div>
+<div class="wrap">
+  <div class="logo">DESHILA<b>CHADOS</b></div>
+  <div class="tag">PANEL · TARJETA DE SELLOS</div>
+
+  <!-- PIN -->
+  <div id="pinbox" class="card">
+    <label>PIN del personal</label>
+    <input type="password" id="pin" inputmode="numeric" placeholder="••••" autocomplete="off">
+    <label style="margin-top:14px;font-size:.75rem;color:#a99e8f;text-transform:none;letter-spacing:0;font-weight:400">
+      <input type="checkbox" id="remember" style="width:auto;transform:scale(1.2);margin-right:8px;vertical-align:middle"> Recordar en este dispositivo
+    </label>
+    <button class="btn pri" id="pinbtn">Entrar</button>
+    <p class="msg err" id="pinmsg"></p>
+  </div>
+
+  <!-- Buscar cliente -->
+  <div id="findbox" class="card hide">
+    <label>Código del cliente</label>
+    <input type="text" id="code" placeholder="DS-XXXXX o su código" autocomplete="off">
+    <button class="btn pri" id="findbtn">Buscar</button>
+    <button class="btn ghost" id="createbtn">Crear tarjeta nueva (sin cuenta)</button>
+    <p class="msg" id="findmsg"></p>
+  </div>
+
+  <!-- Tarjeta -->
+  <div id="cardbox" class="card hide">
+    <div class="cardcode" id="c_code">—</div>
+    <div class="dots" id="c_dots"></div>
+    <div class="count" id="c_count"></div>
+    <div class="free-badge hide" id="c_free"></div>
+    <button class="btn stamp" id="addbtn">+1 sello</button>
+    <button class="btn free hide" id="redeembtn">Canjear sándwich gratis</button>
+    <button class="btn ghost" id="backbtn">Otro cliente</button>
+    <p class="msg ok" id="cardmsg"></p>
+  </div>
+
+  <div class="logout"><a id="logout">Salir del panel</a></div>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  var PIN='';
+  var GOAL=10;
+
+  // PIN recordado
+  try{ var saved=localStorage.getItem('desh_pin'); if(saved){ PIN=saved; showFind(); } }catch(e){}
+
+  $('pinbtn').onclick=function(){
+    PIN=($('pin').value||'').trim();
+    if(!PIN){ return; }
+    // validamos con una llamada 'get' en vacío -> si el pin es malo, 401
+    api('get',{code:'__ping__'}).then(function(r){
+      if(r.status===401){ $('pinmsg').textContent='PIN incorrecto'; PIN=''; return; }
+      if($('remember').checked){ try{localStorage.setItem('desh_pin',PIN);}catch(e){} }
+      $('pinmsg').textContent=''; showFind();
+    });
+  };
+  $('pin').addEventListener('keydown',function(e){ if(e.key==='Enter') $('pinbtn').click(); });
+
+  function showFind(){ $('pinbox').classList.add('hide'); $('cardbox').classList.add('hide'); $('findbox').classList.remove('hide'); $('findmsg').textContent=''; $('code').value=''; setTimeout(function(){$('code').focus();},100); }
+  function showCard(){ $('findbox').classList.add('hide'); $('cardbox').classList.remove('hide'); }
+
+  $('findbtn').onclick=function(){
+    var code=($('code').value||'').trim().toUpperCase();
+    if(!code){ return; }
+    $('findmsg').textContent='Buscando…'; $('findmsg').className='msg';
+    api('get',{code:code}).then(function(r){
+      return r.json().then(function(d){
+        if(r.status===401){ $('findmsg').className='msg err'; $('findmsg').textContent='PIN caducado, vuelve a entrar'; return; }
+        if(d && d.ok && d.found){ render(d.card); showCard(); }
+        else { $('findmsg').className='msg err'; $('findmsg').textContent='No existe esa tarjeta. ¿Creamos una nueva?'; }
+      });
+    });
+  };
+  $('code').addEventListener('keydown',function(e){ if(e.key==='Enter') $('findbtn').click(); });
+
+  $('createbtn').onclick=function(){
+    api('create',{}).then(function(r){return r.json();}).then(function(d){
+      if(d && d.ok){ render(d.card); showCard(); $('cardmsg').textContent='Tarjeta creada. Dale este código al cliente.'; }
+    });
+  };
+
+  var CUR=null;
+  function render(card){
+    CUR=card;
+    $('c_code').textContent=card.code;
+    var dots=''; for(var i=1;i<=GOAL;i++){ dots+='<div class="dot'+(i<=card.stamps?' on':'')+'">'+i+'</div>'; }
+    $('c_dots').innerHTML=dots;
+    var faltan=GOAL-card.stamps;
+    $('c_count').textContent=card.stamps+' / '+GOAL+' sellos'+(card.stamps>0?' · faltan '+faltan:'');
+    if(card.free_available>0){ $('c_free').classList.remove('hide'); $('c_free').textContent='🎁 '+card.free_available+' sándwich(es) gratis por canjear'; $('redeembtn').classList.remove('hide'); }
+    else { $('c_free').classList.add('hide'); $('redeembtn').classList.add('hide'); }
+    $('cardmsg').textContent='';
+  }
+
+  $('addbtn').onclick=function(){
+    var b=$('addbtn'); b.disabled=true; setTimeout(function(){b.disabled=false;},1500); // anti doble-toque
+    api('add',{code:CUR.code}).then(function(r){return r.json();}).then(function(d){
+      if(d && d.ok && d.found){ render(d.card); if(d.reward){ flash(); } else { $('cardmsg').textContent='Sello añadido ✓'; } }
+    });
+  };
+  $('redeembtn').onclick=function(){
+    api('redeem',{code:CUR.code}).then(function(r){return r.json();}).then(function(d){
+      if(d && d.ok && d.found){ if(d.error==='no_reward'){ $('cardmsg').textContent='No hay gratis por canjear'; } else { render(d.card); $('cardmsg').textContent='Sándwich gratis canjeado ✓'; } }
+    });
+  };
+  $('backbtn').onclick=showFind;
+  $('logout').onclick=function(){ try{localStorage.removeItem('desh_pin');}catch(e){} PIN=''; location.reload(); };
+
+  function flash(){ var f=$('flash'); f.classList.add('show'); setTimeout(function(){f.classList.remove('show');},1600); }
+  function api(action,extra){
+    var payload=Object.assign({pin:PIN,action:action},extra||{});
+    return fetch('/api/stamp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  }
+})();
+</script>
+</body>
+</html>
