@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://deshilachados.com/sitemap.xml
+Sitemap: https://www.deshilachados.com/sitemap.xml

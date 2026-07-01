@@ -12,7 +12,8 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') { res.setHeader('Allow', 'POST'); return res.status(405).json({ ok: false, error: 'method_not_allowed' }); }
 
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY, FROM_EMAIL } = process.env;
-  const SITE_URL = process.env.SITE_URL || 'https://www.deshilachados.com';
+  let SITE_URL = process.env.SITE_URL || 'https://www.deshilachados.com';
+  SITE_URL = SITE_URL.replace('://deshilachados.com', '://www.deshilachados.com'); // el apex no resuelve, forzamos www
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !RESEND_API_KEY || !FROM_EMAIL) {
     console.error('Faltan variables de entorno');
     return res.status(500).json({ ok: false, error: 'server_misconfigured' });
