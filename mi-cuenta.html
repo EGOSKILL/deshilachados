@@ -118,6 +118,18 @@
       </div>
     </div>
 
+    <!-- Invita y ganáis 2x1 -->
+    <div id="refwrap" class="card hide">
+      <div style="font-family:'Fraunces',Georgia,serif;font-weight:700;font-size:1.2rem;margin-bottom:4px">Trae un amigo, 2x1 los dos</div>
+      <p class="mut" style="margin:0 0 14px">Comparte tu enlace. Cuando tu amigo se apunte, ganáis un 2x1 cada uno.</p>
+      <div style="display:flex;gap:8px;align-items:stretch;flex-wrap:wrap">
+        <input type="text" id="refLink" readonly style="flex:1;min-width:180px;border:1.5px solid var(--linea);border-radius:10px;padding:11px 12px;font-size:.88rem;background:var(--hueso);color:var(--carbon);margin:0">
+        <button class="btn" id="refCopy" style="width:auto;padding:11px 20px;font-size:.95rem">Copiar</button>
+      </div>
+      <a id="refWa" class="btn" style="background:#25D366;margin-top:10px" target="_blank" rel="noopener">Compartir por WhatsApp</a>
+      <p class="mut center" id="refCount" style="margin-top:14px"></p>
+    </div>
+
     <h2>Promos activas</h2>
     <div class="card" id="promos"><p class="mut">No hay promos activas ahora mismo.</p></div>
 
@@ -169,6 +181,18 @@
           renderStamps($('l_dots'), $('l_count'), $('l_free'), d.loyalty);
           $('l_show').innerHTML='Muestra este código en la barra para sumar sellos: <b>'+esc(d.loyalty.code)+'</b>';
           $('loyaltywrap').classList.remove('hide');
+        }
+        if(d.promo_code){
+          var rlink=location.origin+'/?ref='+encodeURIComponent(d.promo_code);
+          $('refLink').value=rlink;
+          $('refCopy').onclick=function(){
+            try{ navigator.clipboard.writeText(rlink); }catch(e){}
+            var el=$('refCopy'); el.textContent='¡Copiado!'; setTimeout(function(){el.textContent='Copiar';},1500);
+          };
+          $('refWa').href='https://wa.me/?text='+encodeURIComponent('¡Apúntate a Deshilachados y tenemos 2x1 los dos! '+rlink);
+          var rn=d.referrals_count||0;
+          $('refCount').textContent = rn>0 ? ('Ya has traído '+rn+' amig'+(rn===1?'o':'os')+'. ¡Gracias!') : 'Aún no has traído a nadie — ¡comparte tu enlace!';
+          $('refwrap').classList.remove('hide');
         }
         if(d.promos && d.promos.length){
           $('promos').innerHTML = d.promos.map(function(p){

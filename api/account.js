@@ -63,6 +63,14 @@ module.exports = async function handler(req, res) {
       if (ins.ok) { const rows = await ins.json(); loyalty = (rows && rows[0]) ? { code: rows[0].code, stamps: 0, free_available: 0 } : { code: promoCode, stamps: 0, free_available: 0 }; }
     }
 
+    // Amigos traídos (referidos)
+    let referrals_count = 0;
+    if (promoCode) {
+      const rq = await fetch(`${SUPABASE_URL}/rest/v1/referrals?referrer_code=eq.${encodeURIComponent(promoCode)}&select=id`, { headers: H });
+      const rr = rq.ok ? await rq.json() : [];
+      referrals_count = Array.isArray(rr) ? rr.length : 0;
+    }
+
     return res.status(200).json({
       ok: true,
       email,
@@ -70,6 +78,7 @@ module.exports = async function handler(req, res) {
       redeemed: sub ? sub.redeemed : false,
       promos: Array.isArray(promos) ? promos : [],
       loyalty: loyalty ? { ...loyalty, goal: GOAL } : null,
+      referrals_count,
     });
   } catch (err) {
     console.error('account error', err);

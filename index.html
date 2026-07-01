@@ -384,6 +384,13 @@ background:linear-gradient(90deg,rgba(18,13,11,.92) 0%,rgba(18,13,11,.78) 42%,rg
 
 <script>
 (function(){
+  var REF=(new URLSearchParams(location.search).get('ref')||'').trim();
+  if(REF){
+    var bn=document.createElement('div');
+    bn.style.cssText='background:#B03A2E;color:#fff;text-align:center;padding:11px 16px;font-weight:600;font-size:.95rem;font-family:Inter,system-ui,sans-serif';
+    bn.innerHTML='Un amigo te invita a Deshilachados — apúntate y tenéis <b>2x1 los dos</b>.';
+    document.body.insertBefore(bn, document.body.firstChild);
+  }
   function handle(formId, okId, inputId){
     var f=document.getElementById(formId);
     if(!f) return;
@@ -396,7 +403,7 @@ background:linear-gradient(90deg,rgba(18,13,11,.92) 0%,rgba(18,13,11,.78) 42%,rg
       if(btn){ btn.disabled=true; btn.textContent='Enviando…'; }
       var hp=f.querySelector('input[name=\"website\"]');
       fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({email:email, website:hp?hp.value:''})})
+        body:JSON.stringify({email:email, website:hp?hp.value:'', ref:REF})})
         .then(function(r){return r.json();})
         .then(function(d){
           if(d && d.ok){

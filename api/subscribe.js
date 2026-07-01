@@ -41,6 +41,10 @@ module.exports = async function handler(req, res) {
   if (website) return res.status(200).json({ ok: true }); // silencioso para bots
   if (!isValidEmail(email)) return res.status(400).json({ ok: false, error: 'invalid_email' });
 
+  // referido (viene del enlace ?ref=CODIGO del que invita)
+  let ref = (body?.ref || '').trim().toUpperCase();
+  if (!/^[A-Z0-9-]{4,24}$/.test(ref)) ref = '';
+
   const code = makeCode();
 
   try {
@@ -53,7 +57,7 @@ module.exports = async function handler(req, res) {
         'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
         'Prefer': 'return=representation,resolution=ignore-duplicates',
       },
-      body: JSON.stringify([{ email, promo_code: code, source: 'landing' }]),
+      body: JSON.stringify([{ email, promo_code: code, source: 'landing', referred_by: ref || null }]),
     });
 
     if (!insertRes.ok) {
@@ -68,6 +72,23 @@ module.exports = async function handler(req, res) {
     // Si ya estaba apuntado, no reenviamos el correo (evita spam). Respondemos amable.
     if (!isNew) {
       return res.status(200).json({ ok: true, already: true });
+    }
+
+    // 1b) Registrar el referido si vino de un enlace de invitación válido
+    if (ref) {
+      try {
+        const sbH = { 'Content-Type': 'application/json', 'apikey': SUPABASE_SERVICE_ROLE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}` };
+        const rq = await fetch(`${SUPABASE_URL}/rest/v1/subscribers?promo_code=eq.${encodeURIComponent(ref)}&select=email`, { headers: sbH });
+        const rr = rq.ok ? await rq.json() : [];
+        const referrer = Array.isArray(rr) && rr[0] ? rr[0] : null;
+        if (referrer && referrer.email !== email) {
+          await fetch(`${SUPABASE_URL}/rest/v1/referrals?on_conflict=friend_email`, {
+            method: 'POST',
+            headers: { ...sbH, 'Prefer': 'resolution=ignore-duplicates,return=minimal' },
+            body: JSON.stringify([{ referrer_code: ref, friend_email: email }]),
+          });
+        }
+      } catch (e) { console.error('referral error', e); }
     }
 
     // 2) Enviar el email de bienvenida con Resend
@@ -101,6 +122,7 @@ module.exports = async function handler(req, res) {
 
 function welcomeEmail(code, site) {
   const survey = `${site}/encuesta?c=${encodeURIComponent(code)}`;
+  const ref_link = `${site}/?ref=${encodeURIComponent(code)}`;
   const img = (name, alt) => `<img src="${site}/img/${name}" alt="${alt}" width="520" style="display:block;width:100%;max-width:520px;height:auto;border:0">`;
   return `<!doctype html><html lang="es"><body style="margin:0;background:#FAF6EE;font-family:Arial,Helvetica,sans-serif;color:#2B2622">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FAF6EE;padding:32px 16px">
@@ -126,6 +148,16 @@ function welcomeEmail(code, site) {
           </table>
         </td></tr>
         <tr><td style="padding:16px 32px 0"><a href="${site}" style="display:inline-block;background:#B03A2E;color:#FFFFFF;text-decoration:none;font-weight:bold;font-size:15px;padding:12px 24px;border-radius:24px">Ver la carta</a></td></tr>
+
+        <tr><td style="padding:18px 32px 0">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF7EC;border:1px solid #E3D6BD;border-radius:14px">
+            <tr><td style="padding:18px 20px">
+              <div style="font-weight:bold;font-size:15px;color:#2B2622;margin-bottom:4px">Trae un amigo y tenéis 2x1 los dos</div>
+              <div style="font-size:13px;color:#7A6A55;margin-bottom:12px">Comparte tu enlace: cuando tu amigo se apunte, ganáis un 2x1 cada uno.</div>
+              <a href="${ref_link}" style="display:inline-block;background:#D4881F;color:#2B2622;text-decoration:none;font-weight:bold;font-size:14px;padding:11px 20px;border-radius:22px">Invitar a un amigo &#8594;</a>
+            </td></tr>
+          </table>
+        </td></tr>
 
         <tr><td style="padding:26px 32px 10px"><hr style="border:none;border-top:1px solid #E3D6BD;margin:0"></td></tr>
         <tr><td style="padding:6px 0 0">${img('email-sandwich.jpg','Sándwich de pollo deshilachado')}</td></tr>
