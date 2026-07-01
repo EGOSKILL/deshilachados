@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuéntanos cómo te gusta · Deshilachados</title>
+<meta name="description" content="Ayúdanos a afinar la carta de Deshilachados. 1 minuto y a cambio mejoramos tu sándwich.">
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://www.deshilachados.com/encuesta">
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#B03A2E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--rojo:#B03A2E;--rojo-d:#8C2D22;--brasa:#D4881F;--carbon:#2B2622;--pan:#EFE6D3;--hueso:#FAF6EE;--linea:#E3D6BD;--gris:#7A6A55;--r:16px}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--hueso);color:var(--carbon);font-family:"Inter",system-ui,Arial,sans-serif;line-height:1.55}
+  .wrap{max-width:640px;margin:0 auto;padding:0 20px}
+  header{background:var(--carbon);text-align:center;padding:22px 20px}
+  .logo{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:1.5rem;color:var(--hueso);letter-spacing:.3px}
+  .logo b{color:var(--brasa);font-weight:700}
+  .logo .s{display:block;font-family:"Inter";font-size:.66rem;letter-spacing:.22em;color:var(--brasa);margin-top:3px;font-weight:600}
+  .hero{width:100%;height:200px;object-fit:cover;display:block}
+  .intro{padding:30px 0 6px}
+  h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-.01em;margin:0 0 10px}
+  .lede{color:var(--gris);font-size:1.05rem;margin:0}
+  form{padding:8px 0 60px}
+  .q{background:#fff;border:1px solid var(--linea);border-radius:var(--r);padding:20px 22px;margin:16px 0}
+  .q>label.qt{display:block;font-weight:700;font-size:1.05rem;margin-bottom:12px}
+  .opts{display:flex;flex-wrap:wrap;gap:10px}
+  .opt{position:relative}
+  .opt input{position:absolute;opacity:0;width:0;height:0}
+  .opt span{display:inline-block;border:1.5px solid var(--linea);border-radius:999px;padding:9px 16px;font-size:.95rem;cursor:pointer;transition:.15s;background:var(--hueso);user-select:none}
+  .opt input:checked+span{background:var(--rojo);border-color:var(--rojo);color:#fff;font-weight:600}
+  .opt span:hover{border-color:var(--brasa)}
+  textarea{width:100%;border:1.5px solid var(--linea);border-radius:12px;padding:12px 14px;font-family:inherit;font-size:1rem;resize:vertical;min-height:84px;background:var(--hueso)}
+  textarea:focus{outline:none;border-color:var(--brasa)}
+  .btn{display:inline-block;background:var(--rojo);color:#fff;border:none;font-family:inherit;font-weight:700;font-size:1.05rem;padding:15px 30px;border-radius:999px;cursor:pointer;transition:.15s;margin-top:8px}
+  .btn:hover{background:var(--rojo-d)}
+  .btn:disabled{opacity:.6;cursor:default}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+  .ok{display:none;text-align:center;padding:50px 20px}
+  .ok.show{display:block}
+  .ok .em{font-size:2.4rem}
+  .ok h2{font-family:"Fraunces",Georgia,serif;font-size:1.7rem;margin:14px 0 8px}
+  .ok p{color:var(--gris);margin:0 0 22px}
+  .ok a{color:var(--rojo);font-weight:700;text-decoration:none}
+  footer{background:var(--pan);text-align:center;padding:20px;color:var(--gris);font-size:.85rem}
+  @media(max-width:520px){.hero{height:160px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">DESHILA<b>CHADOS</b><span class="s">SÁNDWICHES · MADRID</span></div>
+</header>
+<img class="hero" src="/img/email-sandwich.jpg" alt="Sándwich de pollo deshilachado de Deshilachados">
+
+<div class="wrap">
+  <div class="intro">
+    <h1>Cuéntanos cómo te gusta</h1>
+    <p class="lede">Aún no hemos abierto, así que estás a tiempo de opinar. Es 1 minuto y con esto afinamos la carta antes del primer día.</p>
+  </div>
+
+  <form id="f" novalidate>
+    <div class="q">
+      <label class="qt">1 · ¿Cuál probarías primero?</label>
+      <div class="opts" data-name="fav_sandwich">
+        <label class="opt"><input type="radio" name="fav_sandwich" value="Pollo al chilindrón"><span>Pollo al chilindrón</span></label>
+        <label class="opt"><input type="radio" name="fav_sandwich" value="Pollo cajún"><span>Pollo cajún</span></label>
+        <label class="opt"><input type="radio" name="fav_sandwich" value="Pollo barbacoa"><span>Pollo barbacoa</span></label>
+        <label class="opt"><input type="radio" name="fav_sandwich" value="Pulled pork"><span>Pulled pork</span></label>
+        <label class="opt"><input type="radio" name="fav_sandwich" value="Carrillera de ternera"><span>Carrillera de ternera</span></label>
+        <label class="opt"><input type="radio" name="fav_sandwich" value="Vegetal"><span>Vegetal</span></label>
+        <label class="opt"><input type="radio" name="fav_sandwich" value="Köfte"><span>Köfte</span></label>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="qt">2 · ¿Qué pan prefieres?</label>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="bread" value="Brioche"><span>Brioche</span></label>
+        <label class="opt"><input type="radio" name="bread" value="Brioche sin gluten"><span>Brioche sin gluten</span></label>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="qt">3 · ¿Cómo lo quieres de picante?</label>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="spice" value="Suave"><span>Suave</span></label>
+        <label class="opt"><input type="radio" name="spice" value="Medio"><span>Medio</span></label>
+        <label class="opt"><input type="radio" name="spice" value="Picante"><span>Picante</span></label>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="qt">4 · Para acompañar…</label>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="side" value="Alitas"><span>Alitas</span></label>
+        <label class="opt"><input type="radio" name="side" value="Patatas baby"><span>Patatas baby</span></label>
+        <label class="opt"><input type="radio" name="side" value="Los dos"><span>Los dos</span></label>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="qt">5 · El tamaño del sándwich te parece…</label>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="size_pref" value="Está bien"><span>Está bien</span></label>
+        <label class="opt"><input type="radio" name="size_pref" value="Lo quiero más grande"><span>Lo quiero más grande</span></label>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="qt">6 · El precio te parece…</label>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="price_ok" value="Barato"><span>Barato</span></label>
+        <label class="opt"><input type="radio" name="price_ok" value="Justo"><span>Justo</span></label>
+        <label class="opt"><input type="radio" name="price_ok" value="Un poco alto"><span>Un poco alto</span></label>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="qt" for="comment">7 · ¿Algo que echas de menos o nos quieras decir? <span style="font-weight:400;color:var(--gris)">(opcional)</span></label>
+      <textarea id="comment" name="comment" placeholder="Un sándwich que te gustaría, una idea, lo que sea…"></textarea>
+    </div>
+
+    <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button class="btn" type="submit" id="send">Enviar mis respuestas</button>
+  </form>
+
+  <div class="ok" id="ok">
+    <div class="em">🙌</div>
+    <h2>¡Gracias por ayudarnos!</h2>
+    <p>Tu opinión ya está con nosotros. Con esto afinamos la carta antes de abrir.</p>
+    <a href="https://www.deshilachados.com">← Volver a deshilachados.com</a>
+  </div>
+</div>
+
+<footer>@deshilachados.madrid · Madrid · Se deshace solo.</footer>
+
+<script>
+(function(){
+  var params=new URLSearchParams(location.search);
+  var code=params.get('c')||'';
+  var f=document.getElementById('f');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var data={promo_code:code, website:f.querySelector('input[name=website]').value};
+    ['fav_sandwich','bread','spice','side','size_pref','price_ok'].forEach(function(n){
+      var el=f.querySelector('input[name="'+n+'"]:checked'); if(el) data[n]=el.value;
+    });
+    var c=document.getElementById('comment').value.trim(); if(c) data.comment=c;
+    var answered=['fav_sandwich','bread','spice','side','size_pref','price_ok','comment'].some(function(k){return data[k];});
+    if(!answered){ alert('Marca al menos una respuesta 🙂'); return; }
+    var btn=document.getElementById('send'); btn.disabled=true; btn.textContent='Enviando…';
+    fetch('/api/encuesta',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d&&d.ok){ f.style.display='none'; document.getElementById('ok').classList.add('show'); window.scrollTo(0,0); }
+        else { btn.disabled=false; btn.textContent='Enviar mis respuestas'; alert('Uy, algo falló. Inténtalo de nuevo.'); }
+      })
+      .catch(function(){ btn.disabled=false; btn.textContent='Enviar mis respuestas'; alert('Sin conexión. Inténtalo de nuevo.'); });
+  });
+})();
+</script>
+</body>
+</html>

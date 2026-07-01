@@ -23,7 +23,7 @@ module.exports = async function handler(req, res) {
   }
 
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY, FROM_EMAIL } = process.env;
-  const SITE_URL = process.env.SITE_URL || 'https://deshilachados.com';
+  const SITE_URL = process.env.SITE_URL || 'https://www.deshilachados.com';
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !RESEND_API_KEY || !FROM_EMAIL) {
     console.error('Faltan variables de entorno');
     return res.status(500).json({ ok: false, error: 'server_misconfigured' });
@@ -97,18 +97,21 @@ module.exports = async function handler(req, res) {
 }
 
 function welcomeEmail(code, site) {
+  const survey = `${site}/encuesta?c=${encodeURIComponent(code)}`;
+  const img = (name, alt) => `<img src="${site}/img/${name}" alt="${alt}" width="520" style="display:block;width:100%;max-width:520px;height:auto;border:0">`;
   return `<!doctype html><html lang="es"><body style="margin:0;background:#FAF6EE;font-family:Arial,Helvetica,sans-serif;color:#2B2622">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FAF6EE;padding:32px 16px">
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#FFFFFF;border:1px solid #E3D6BD;border-radius:16px;overflow:hidden">
-        <tr><td style="background:#2B2622;padding:26px 32px;text-align:center">
+        <tr><td style="background:#2B2622;padding:24px 32px;text-align:center">
           <div style="font-family:Georgia,serif;font-size:24px;font-weight:bold;color:#FAF6EE;letter-spacing:.5px">DESHILA<span style="color:#D4881F">CHADOS</span></div>
           <div style="font-size:11px;letter-spacing:2px;color:#D4881F;margin-top:4px">SÁNDWICHES · MADRID</div>
         </td></tr>
-        <tr><td style="padding:34px 32px 8px">
-          <h1 style="font-family:Georgia,serif;font-size:26px;color:#2B2622;margin:0 0 12px">¡Gracias por apuntarte!</h1>
+        <tr><td style="padding:0">${img('email-local.jpg','Nuestra esquina en Madrid, pronto')}</td></tr>
+        <tr><td style="padding:30px 32px 6px">
+          <h1 style="font-family:Georgia,serif;font-size:25px;color:#2B2622;margin:0 0 12px">¡Gracias por apuntarte!</h1>
           <p style="font-size:16px;line-height:1.6;color:#7A6A55;margin:0 0 8px">Nos alegra que quieras probar Deshilachados. Te avisaremos en cuanto abramos nuestra primera esquina en Madrid.</p>
-          <p style="font-size:16px;line-height:1.6;color:#7A6A55;margin:0 0 24px">Y por confiar desde el principio, aquí va tu regalo de bienvenida:</p>
+          <p style="font-size:16px;line-height:1.6;color:#7A6A55;margin:0 0 22px">Y por confiar desde el principio, aquí va tu regalo de bienvenida:</p>
         </td></tr>
         <tr><td style="padding:0 32px">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#EFE6D3;border:2px dashed #B03A2E;border-radius:14px">
@@ -119,10 +122,16 @@ function welcomeEmail(code, site) {
             </td></tr>
           </table>
         </td></tr>
-        <tr><td style="padding:26px 32px 34px">
-          <p style="font-size:15px;line-height:1.6;color:#2B2622;margin:0 0 20px">Se cocina despacio, se sirve rápido. <b>Se deshace solo.</b></p>
-          <a href="${site}" style="display:inline-block;background:#B03A2E;color:#FFFFFF;text-decoration:none;font-weight:bold;font-size:15px;padding:12px 24px;border-radius:24px">Ver la carta</a>
+        <tr><td style="padding:16px 32px 0"><a href="${site}" style="display:inline-block;background:#B03A2E;color:#FFFFFF;text-decoration:none;font-weight:bold;font-size:15px;padding:12px 24px;border-radius:24px">Ver la carta</a></td></tr>
+
+        <tr><td style="padding:26px 32px 10px"><hr style="border:none;border-top:1px solid #E3D6BD;margin:0"></td></tr>
+        <tr><td style="padding:6px 0 0">${img('email-sandwich.jpg','Sándwich de pollo deshilachado')}</td></tr>
+        <tr><td style="padding:22px 32px 34px">
+          <h2 style="font-family:Georgia,serif;font-size:21px;color:#2B2622;margin:0 0 8px">Y una última cosa…</h2>
+          <p style="font-size:15px;line-height:1.6;color:#7A6A55;margin:0 0 18px">Aún no hemos abierto, así que estás a tiempo de opinar. Cuéntanos cómo te gusta el sándwich y afinamos la carta antes del primer día. Es 1 minuto.</p>
+          <a href="${survey}" style="display:inline-block;background:#D4881F;color:#2B2622;text-decoration:none;font-weight:bold;font-size:15px;padding:13px 26px;border-radius:24px">Cuéntanos cómo te gusta →</a>
         </td></tr>
+
         <tr><td style="background:#EFE6D3;padding:18px 32px;text-align:center">
           <div style="font-size:12px;color:#7A6A55">@deshilachados.madrid · Madrid</div>
           <div style="font-size:11px;color:#7A6A55;margin-top:6px">Válido en la primera compra. Un uso por persona. Sujeto a la apertura de nuestros locales.</div>
