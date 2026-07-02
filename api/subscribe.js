@@ -44,6 +44,7 @@ module.exports = async function handler(req, res) {
   // referido (viene del enlace ?ref=CODIGO del que invita)
   let ref = (body?.ref || '').trim().toUpperCase();
   if (!/^[A-Z0-9-]{4,24}$/.test(ref)) ref = '';
+  const consent = body?.consent === true || body?.consent === 'true';
 
   const code = makeCode();
 
@@ -57,7 +58,7 @@ module.exports = async function handler(req, res) {
         'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
         'Prefer': 'return=representation,resolution=ignore-duplicates',
       },
-      body: JSON.stringify([{ email, promo_code: code, source: 'landing', referred_by: ref || null }]),
+      body: JSON.stringify([{ email, promo_code: code, source: 'landing', referred_by: ref || null, consent: consent || null, consent_at: consent ? new Date().toISOString() : null }]),
     });
 
     if (!insertRes.ok) {
@@ -171,6 +172,7 @@ function welcomeEmail(code, site) {
           <div style="font-size:12px;color:#7A6A55">@deshilachados.madrid · Madrid</div>
           <div style="font-size:12px;margin-top:8px"><a href="${site}/mi-cuenta" style="color:#B03A2E;text-decoration:none;font-weight:bold">Ver mi cuenta</a></div>
           <div style="font-size:11px;color:#7A6A55;margin-top:6px">Válido en la primera compra. Un uso por persona. Sujeto a la apertura de nuestros locales.</div>
+          <div style="font-size:11px;color:#7A6A55;margin-top:10px"><a href="${site}/baja?c=${encodeURIComponent(code)}" style="color:#7A6A55;text-decoration:underline">Darse de baja</a> &middot; <a href="${site}/privacidad" style="color:#7A6A55;text-decoration:underline">Privacidad</a> &middot; <a href="${site}/aviso-legal" style="color:#7A6A55;text-decoration:underline">Aviso legal</a></div>
         </td></tr>
       </table>
     </td></tr>

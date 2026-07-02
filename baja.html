@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Darse de baja · Deshilachados</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+<meta name="theme-color" content="#B03A2E">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--rojo:#B03A2E;--rojo-d:#8C2D22;--brasa:#D4881F;--carbon:#2B2622;--pan:#EFE6D3;--hueso:#FAF6EE;--linea:#E3D6BD;--gris:#7A6A55}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--hueso);color:var(--carbon);font-family:"Inter",system-ui,Arial,sans-serif;line-height:1.6;min-height:100vh}
+  header{background:var(--carbon);text-align:center;padding:20px}
+  .logo{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:1.4rem;color:var(--hueso)}
+  .logo b{color:var(--brasa)}
+  .wrap{max-width:520px;margin:0 auto;padding:60px 22px;text-align:center}
+  h1{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:1.9rem;margin:0 0 12px}
+  p{color:var(--gris);font-size:1.05rem}
+  .btn{display:inline-block;background:var(--rojo);color:#fff;border:none;font-family:inherit;font-weight:700;font-size:1.05rem;padding:14px 28px;border-radius:999px;cursor:pointer;margin-top:18px;text-decoration:none}
+  .btn:hover{background:var(--rojo-d)} .btn.ghost{background:transparent;border:1.5px solid var(--linea);color:var(--carbon)}
+  a.link{color:var(--rojo);font-weight:600;text-decoration:none}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<header><a href="/" style="text-decoration:none"><span class="logo">DESHILA<b>CHADOS</b></span></a></header>
+<div class="wrap">
+  <div id="ask">
+    <h1>¿Darte de baja?</h1>
+    <p>Dejarás de recibir novedades y promociones de Deshilachados. Puedes volver a apuntarte cuando quieras.</p>
+    <button class="btn" id="confirm">Sí, darme de baja</button>
+    <div style="margin-top:16px"><a class="link" href="/">No, volver a la web</a></div>
+  </div>
+  <div id="done" class="hide">
+    <h1>Hecho 🙏</h1>
+    <p>Te has dado de baja. No te enviaremos más correos. ¡Esperamos verte igualmente por la esquina!</p>
+    <p style="margin-top:18px"><a class="link" href="/">← Volver a deshilachados.com</a></p>
+  </div>
+  <div id="nocode" class="hide">
+    <h1>Enlace incompleto</h1>
+    <p>Para darte de baja, usa el enlace "Darse de baja" que aparece al final de cualquiera de nuestros correos.</p>
+  </div>
+</div>
+<script>
+(function(){
+  var code=(new URLSearchParams(location.search).get('c')||'').trim();
+  var $=function(id){return document.getElementById(id);};
+  if(!code){ $('ask').classList.add('hide'); $('nocode').classList.remove('hide'); return; }
+  $('confirm').onclick=function(){
+    var b=$('confirm'); b.disabled=true; b.textContent='Procesando…';
+    fetch('/api/unsubscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})})
+      .then(function(r){return r.json();})
+      .then(function(){ $('ask').classList.add('hide'); $('done').classList.remove('hide'); })
+      .catch(function(){ b.disabled=false; b.textContent='Sí, darme de baja'; });
+  };
+})();
+</script>
+</body>
+</html>

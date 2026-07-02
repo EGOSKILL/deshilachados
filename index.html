@@ -192,6 +192,9 @@ background:linear-gradient(90deg,rgba(18,13,11,.92) 0%,rgba(18,13,11,.78) 42%,rg
 #carta .menu-note,#carta .sides-note{color:#e6dbc9}
 
 #nutri .nutri-wrap{margin-top:26px;overflow-x:auto;-webkit-overflow-scrolling:touch}table.nutri{width:100%;border-collapse:collapse;min-width:560px;font-size:.95rem}table.nutri th,table.nutri td{text-align:right;padding:12px 10px;border-bottom:1px solid var(--linea);white-space:nowrap}table.nutri th{font-family:"Inter";font-weight:700;color:var(--gris);font-size:.8rem;text-transform:uppercase;letter-spacing:.04em}table.nutri th:first-child,table.nutri td.nm{text-align:left}table.nutri td.nm{font-weight:600;color:var(--carbon)}table.nutri td{color:var(--carbon);font-variant-numeric:tabular-nums}table.nutri .u{color:var(--gris);font-size:.72rem;margin-left:2px}table.nutri .sub{color:var(--gris);font-size:.8rem}table.nutri thead th .h{display:block;font-size:.68rem;color:var(--brasa)}.nutri-note{margin-top:18px;font-size:.85rem;color:var(--gris);max-width:70ch}
+.consent{display:flex;gap:8px;align-items:flex-start;font-size:.82rem;color:var(--gris);max-width:440px;margin-top:12px;line-height:1.4;cursor:pointer}
+.consent input{margin-top:2px;flex-shrink:0;width:16px;height:16px;accent-color:var(--rojo)}
+.consent a{color:var(--rojo);font-weight:600}
 </style>
 <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
 <script type="application/ld+json">
@@ -219,6 +222,7 @@ background:linear-gradient(90deg,rgba(18,13,11,.92) 0%,rgba(18,13,11,.78) 42%,rg
       <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
         <button class="btn" type="submit">Avísame de la apertura</button>
       </form>
+      <label class="consent"><input type="checkbox" id="consent1"> Acepto la <a href="/privacidad" target="_blank" rel="noopener">Política de privacidad</a> y recibir novedades de Deshilachados.</label>
       <p class="formnote">Apúntate: te avisamos de la apertura y te llevamos un <b>2x1</b> para tu primera compra.</p>
       <p class="formok" id="ok1">¡Hecho! Te avisamos en cuanto abramos.</p>
     </div>
@@ -361,6 +365,7 @@ background:linear-gradient(90deg,rgba(18,13,11,.92) 0%,rgba(18,13,11,.78) 42%,rg
       <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <button class="btn" type="submit">Avísame de la apertura</button>
     </form>
+    <label class="consent" style="margin-left:auto;margin-right:auto"><input type="checkbox" id="consent2"> Acepto la <a href="/privacidad" target="_blank" rel="noopener">Política de privacidad</a> y recibir novedades de Deshilachados.</label>
     <p class="formok" id="ok2" style="max-width:440px;margin:14px auto 0">¡Hecho! Te avisamos en cuanto abramos.</p>
     <p class="handle reveal">Síguenos en <b>@deshilachados.madrid</b></p>
   </div>
@@ -376,6 +381,8 @@ background:linear-gradient(90deg,rgba(18,13,11,.92) 0%,rgba(18,13,11,.78) 42%,rg
       <a href="https://instagram.com/deshilachados.madrid" target="_blank" rel="noopener">Instagram</a>
       <a href="https://tiktok.com/@deshilachados.madrid" target="_blank" rel="noopener">TikTok</a>
       <a href="/mi-cuenta">Mi cuenta</a>
+      <a href="/aviso-legal">Aviso legal</a>
+      <a href="/privacidad">Privacidad</a>
       <a href="#avisame">Avísame</a>
     </div>
     <p class="foot-legal">Madrid · Próximamente · Comercio de comida para llevar · © 2026 Deshilachados</p>
@@ -391,7 +398,7 @@ background:linear-gradient(90deg,rgba(18,13,11,.92) 0%,rgba(18,13,11,.78) 42%,rg
     bn.innerHTML='Un amigo te invita a Deshilachados — apúntate y tenéis <b>2x1 los dos</b>.';
     document.body.insertBefore(bn, document.body.firstChild);
   }
-  function handle(formId, okId, inputId){
+  function handle(formId, okId, inputId, consentId){
     var f=document.getElementById(formId);
     if(!f) return;
     f.addEventListener('submit',function(e){
@@ -399,11 +406,13 @@ background:linear-gradient(90deg,rgba(18,13,11,.92) 0%,rgba(18,13,11,.78) 42%,rg
       var inp=document.getElementById(inputId);
       var email=(inp.value||'').trim();
       if(!email || email.indexOf('@')<0){ inp.focus(); inp.style.borderColor='#B03A2E'; return; }
+      var cons=consentId?document.getElementById(consentId):null;
+      if(cons && !cons.checked){ var lab=cons.closest('.consent'); if(lab) lab.style.color='#B03A2E'; cons.focus(); return; }
       var btn=f.querySelector('button'); var old=btn?btn.textContent:'';
       if(btn){ btn.disabled=true; btn.textContent='Enviando…'; }
       var hp=f.querySelector('input[name=\"website\"]');
       fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({email:email, website:hp?hp.value:'', ref:REF})})
+        body:JSON.stringify({email:email, website:hp?hp.value:'', ref:REF, consent:cons?cons.checked:false})})
         .then(function(r){return r.json();})
         .then(function(d){
           if(d && d.ok){
@@ -427,8 +436,8 @@ background:linear-gradient(90deg,rgba(18,13,11,.92) 0%,rgba(18,13,11,.78) 42%,rg
         });
     });
   }
-  handle('form1','ok1','email1');
-  handle('form2','ok2','email2');
+  handle('form1','ok1','email1','consent1');
+  handle('form2','ok2','email2','consent2');
 
   if(!('IntersectionObserver' in window)){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});return;}
   var obs=new IntersectionObserver(function(es){
