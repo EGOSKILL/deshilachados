@@ -50,6 +50,10 @@
   .brand span{color:var(--rojo)}
   .nav-cta{font-weight:600;font-size:.92rem;padding:9px 18px;border-radius:999px;background:var(--carbon);color:var(--hueso);transition:background .2s}
   .nav-cta:hover{background:var(--rojo)}
+  .nav-right{display:flex;align-items:center;gap:10px}
+  .nav-ghost{font-weight:600;font-size:.92rem;padding:9px 16px;border-radius:999px;color:var(--carbon);border:1px solid var(--linea);transition:.2s}
+  .nav-ghost:hover{border-color:var(--rojo);color:var(--rojo)}
+  @media(max-width:430px){.nav-ghost{padding:8px 12px;font-size:.82rem}}
 
   /* BTN */
   .btn{display:inline-block;font-family:"Inter";font-weight:600;font-size:1rem;padding:15px 26px;border-radius:999px;background:var(--rojo);color:#fff;border:none;cursor:pointer;transition:transform .15s,background .2s}
@@ -206,7 +210,7 @@ background:linear-gradient(90deg,rgba(18,13,11,.92) 0%,rgba(18,13,11,.78) 42%,rg
 <nav>
   <div class="wrap nav-in">
     <div class="brand" style="display:flex;align-items:center;gap:9px"><img loading="lazy" decoding="async" src="img/24d0b982f3.webp" alt="Deshilachados" style="height:32px;width:auto"><span style="color:var(--carbon)">Deshila<span style="color:var(--rojo)">chados</span></span></div>
-    <a href="#avisame" class="nav-cta">Avísame</a>
+    <div class="nav-right"><a href="/zona" class="nav-ghost">Vota tu barrio</a><a href="#avisame" class="nav-cta">Avísame</a></div>
   </div>
 </nav>
 
@@ -350,6 +354,7 @@ background:linear-gradient(90deg,rgba(18,13,11,.92) 0%,rgba(18,13,11,.78) 42%,rg
         <p class="eyebrow-2">Pronto, en tu barrio</p>
         <h2>Nos vemos en la esquina</h2>
         <p>Locales de calle para pedir, coger y seguir. Abrimos nuestras primeras esquinas en el centro de Madrid.</p>
+        <a href="/zona" class="btn" style="margin-top:20px;display:inline-block">Vota tu barrio &#8594;</a>
       </div>
     </div>
   </div>
