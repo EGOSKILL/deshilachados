@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vota tu barrio · Deshilachados</title>
+<meta name="description" content="¿Quieres un Deshilachados cerca de ti? Dinos tu código postal de Madrid y abrimos antes en los barrios más votados.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.deshilachados.com/zona">
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#B03A2E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--rojo:#B03A2E;--rojo-d:#8C2D22;--brasa:#D4881F;--carbon:#2B2622;--pan:#EFE6D3;--hueso:#FAF6EE;--linea:#E3D6BD;--gris:#7A6A55;--r:16px}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--hueso);color:var(--carbon);font-family:"Inter",system-ui,Arial,sans-serif;line-height:1.55}
+  .wrap{max-width:640px;margin:0 auto;padding:0 20px}
+  header{background:var(--carbon);text-align:center;padding:22px 20px}
+  .logo{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:1.5rem;color:var(--hueso);letter-spacing:.3px}
+  .logo b{color:var(--brasa);font-weight:700}
+  .logo .s{display:block;font-family:"Inter";font-size:.66rem;letter-spacing:.22em;color:var(--brasa);margin-top:3px;font-weight:600}
+  .hero{width:100%;height:200px;object-fit:cover;display:block}
+  .intro{padding:30px 0 6px}
+  h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(1.7rem,5vw,2.3rem);letter-spacing:-.01em;margin:0 0 10px}
+  .lede{color:var(--gris);font-size:1.05rem;margin:0}
+  form{padding:14px 0 60px}
+  .q{background:#fff;border:1px solid var(--linea);border-radius:var(--r);padding:20px 22px;margin:16px 0}
+  label.qt{display:block;font-weight:700;font-size:1rem;margin-bottom:8px}
+  label.qt .opt{color:var(--gris);font-weight:400}
+  input[type=email],input[type=text]{width:100%;border:1.5px solid var(--linea);border-radius:12px;padding:13px 14px;font-family:inherit;font-size:1rem;background:var(--hueso);color:var(--carbon)}
+  input:focus{outline:none;border-color:var(--brasa);box-shadow:0 0 0 3px rgba(212,136,31,.15)}
+  .consent{display:flex;gap:10px;align-items:flex-start;font-size:.9rem;color:var(--gris);margin-top:6px}
+  .consent input{margin-top:3px}
+  .consent a{color:var(--rojo)}
+  .btn{display:inline-block;background:var(--rojo);color:#fff;border:none;font-family:inherit;font-weight:700;font-size:1.05rem;padding:15px 30px;border-radius:999px;cursor:pointer;transition:.15s;margin-top:6px;width:100%}
+  .btn:hover{background:var(--rojo-d)}
+  .btn:disabled{opacity:.6;cursor:default}
+  .btn.wa{background:#25D366;color:#0a3d1e}
+  .btn.wa:hover{background:#1da851}
+  .msg{font-size:.9rem;margin-top:10px;min-height:1px}
+  .msg.err{color:var(--rojo-d);font-weight:600}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+  .state{display:none;text-align:center;padding:44px 20px}
+  .state.show{display:block}
+  .state .em{font-size:2.6rem}
+  .state h2{font-family:"Fraunces",Georgia,serif;font-size:1.7rem;margin:14px 0 8px}
+  .state p{color:var(--gris);margin:0 auto 18px;max-width:42ch}
+  .reflink{background:var(--pan);border:1px dashed var(--brasa);border-radius:12px;padding:14px 16px;margin:0 auto 18px;max-width:420px;text-align:left}
+  .reflink .l{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--gris);font-weight:700;margin-bottom:5px}
+  .reflink .code{font-family:"Fraunces",Georgia,serif;font-weight:700;color:var(--rojo-d);word-break:break-all}
+  footer{background:var(--pan);text-align:center;padding:20px;color:var(--gris);font-size:.85rem}
+  footer a{color:var(--rojo);text-decoration:none}
+  @media(max-width:520px){.hero{height:160px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">DESHILA<b>CHADOS</b><span class="s">SÁNDWICHES · MADRID</span></div>
+</header>
+<img class="hero" src="/img/email-local.jpg" alt="Nuestra esquina en Madrid, pronto">
+
+<div class="wrap">
+
+  <!-- FORMULARIO -->
+  <div id="formState">
+    <div class="intro">
+      <h1>¿Quieres un Deshilachados cerca de ti?</h1>
+      <p class="lede">Dinos tu código postal de Madrid y te avisamos cuando abramos en tu zona. Los barrios más votados abren antes. Trae amigos: cada voto sube tu barrio en el ranking.</p>
+    </div>
+    <form id="form" autocomplete="on">
+      <div class="q">
+        <label class="qt" for="email">Correo electrónico</label>
+        <input type="email" id="email" placeholder="tu@correo.com" autocomplete="email" required>
+      </div>
+      <div class="q">
+        <label class="qt" for="cp">Código postal <span class="opt">· Madrid capital (28001–28055)</span></label>
+        <input type="text" id="cp" placeholder="28051" inputmode="numeric" maxlength="5" autocomplete="postal-code" required>
+      </div>
+      <div class="q">
+        <label class="qt" for="zona">Barrio o zona de interés <span class="opt">· opcional</span></label>
+        <input type="text" id="zona" placeholder="Ensanche de Vallecas, La Gavia…" maxlength="60">
+      </div>
+      <input type="text" class="hp" id="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="q">
+        <div class="consent">
+          <input type="checkbox" id="consent">
+          <label for="consent">Acepto que Deshilachados guarde mi correo y código postal para avisarme de aperturas cercanas y del desarrollo de la marca. Consulta la <a href="/privacidad" target="_blank">política de privacidad</a>. Puedes darte de baja cuando quieras.</label>
+        </div>
+      </div>
+      <button class="btn" id="submit" type="submit">Votar mi barrio</button>
+      <p class="msg" id="msg"></p>
+    </form>
+  </div>
+
+  <!-- PENDIENTE DE CONFIRMAR -->
+  <div class="state" id="pendingState">
+    <div class="em">📩</div>
+    <h2>Revisa tu correo</h2>
+    <p>Te hemos enviado un email para confirmar tu voto. Ábrelo y pulsa <b>“Confirmar mi voto”</b>. Sin ese clic no cuenta (así evitamos votos falsos).</p>
+    <p style="font-size:.85rem">¿No lo ves? Mira en spam o promociones.</p>
+  </div>
+
+  <!-- CONFIRMADO -->
+  <div class="state" id="okState">
+    <div class="em">🔥</div>
+    <h2>¡Voto confirmado!</h2>
+    <p id="okMsg">Ya cuentas en el mapa de demanda de tu barrio.</p>
+    <div class="reflink">
+      <div class="l">Tu enlace para sumar votos a tu barrio</div>
+      <div class="code" id="refUrl">—</div>
+    </div>
+    <button class="btn wa" id="waBtn">Compartir por WhatsApp</button>
+  </div>
+
+  <!-- ERROR -->
+  <div class="state" id="errState">
+    <div class="em">⚠️</div>
+    <h2>Enlace no válido</h2>
+    <p>Ese enlace de confirmación ha caducado o ya se usó. Vuelve a votar y te mandamos uno nuevo.</p>
+    <button class="btn" onclick="location.href='/zona'">Votar de nuevo</button>
+  </div>
+
+</div>
+
+<footer>
+  @deshilachados.madrid · <a href="/privacidad">Privacidad</a> · <a href="/aviso-legal">Aviso legal</a>
+</footer>
+
+<script>
+(function(){
+  var qs=new URLSearchParams(location.search);
+  var ref=(qs.get('ref')||'').trim();
+  function show(id){['formState','pendingState','okState','errState'].forEach(function(x){document.getElementById(x).classList.remove('show');document.getElementById(x).style.display=(x===id)?'block':'none';});}
+  // estados por URL (vuelta del email)
+  if(qs.get('ok')==='1'){
+    var cp=qs.get('cp')||''; var code=qs.get('code')||'';
+    document.getElementById('okMsg').textContent = cp? ('Ya cuentas en el '+cp+'. Cuanta más gente de tu zona confirme, antes abrimos ahí.') : 'Ya cuentas en el mapa de demanda de tu barrio.';
+    var url='https://www.deshilachados.com/zona?ref='+encodeURIComponent(code);
+    document.getElementById('refUrl').textContent='deshilachados.com/zona?ref='+code;
+    document.getElementById('waBtn').onclick=function(){
+      var t=encodeURIComponent('Quiero un Deshilachados en mi barrio 🔥 Vota tu código postal y abrimos antes: '+url);
+      window.open('https://wa.me/?text='+t,'_blank');
+    };
+    show('okState'); return;
+  }
+  if(qs.get('err')==='1'){ show('errState'); return; }
+  show('formState');
+
+  var errText={invalid_email:'Introduce un correo válido.',invalid_cp:'El código postal debe tener 5 dígitos.',not_madrid:'De momento solo abrimos en Madrid capital (28001–28055).',consent_required:'Necesitamos tu consentimiento para guardar el dato.',server_misconfigured:'Servicio no disponible ahora mismo.',db_error:'No hemos podido guardar tu voto. Inténtalo de nuevo.',unexpected:'Algo ha fallado. Inténtalo de nuevo.'};
+  var form=document.getElementById('form'), btn=document.getElementById('submit'), msg=document.getElementById('msg');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    msg.className='msg'; msg.textContent='';
+    var email=document.getElementById('email').value.trim().toLowerCase();
+    var cp=document.getElementById('cp').value.trim();
+    var zona=document.getElementById('zona').value.trim();
+    var consent=document.getElementById('consent').checked;
+    var website=document.getElementById('website').value;
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.className='msg err'; msg.textContent=errText.invalid_email; return; }
+    if(!/^\d{5}$/.test(cp)){ msg.className='msg err'; msg.textContent=errText.invalid_cp; return; }
+    if(!/^280(0[1-9]|[1-4]\d|5[0-5])$/.test(cp)){ msg.className='msg err'; msg.textContent=errText.not_madrid; return; }
+    if(!consent){ msg.className='msg err'; msg.textContent=errText.consent_required; return; }
+    btn.disabled=true; btn.textContent='Enviando…';
+    fetch('/api/zona',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,cp:cp,zona:zona,ref:ref,consent:true,website:website})})
+      .then(function(r){return r.json().catch(function(){return {};});})
+      .then(function(d){
+        if(d && d.ok){ if(d.already){ document.getElementById('okMsg').textContent='Ya habías confirmado tu voto en este código postal. ¡Gracias!'; document.querySelector('#okState .reflink').style.display='none'; document.getElementById('waBtn').style.display='none'; show('okState'); } else { show('pendingState'); } return; }
+        btn.disabled=false; btn.textContent='Votar mi barrio';
+        msg.className='msg err'; msg.textContent=errText[d && d.error] || errText.unexpected;
+      })
+      .catch(function(){ btn.disabled=false; btn.textContent='Votar mi barrio'; msg.className='msg err'; msg.textContent=errText.unexpected; });
+  });
+})();
+</script>
+</body>
+</html>

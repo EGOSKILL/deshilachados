@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa de demanda · Deshilachados</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+<meta name="theme-color" content="#2B2622">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--rojo:#B03A2E;--rojo-d:#8C2D22;--brasa:#D4881F;--carbon:#2B2622;--pan:#EFE6D3;--hueso:#FAF6EE;--linea:#E3D6BD;--gris:#7A6A55}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--hueso);color:var(--carbon);font-family:"Inter",system-ui,Arial,sans-serif;line-height:1.5}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px 70px}
+  header{background:var(--carbon);text-align:center;padding:20px}
+  .logo{font-family:"Fraunces",Georgia,serif;font-weight:900;font-size:1.4rem;color:var(--hueso)}
+  .logo b{color:var(--brasa)}
+  .logo .s{display:block;font-size:.62rem;letter-spacing:.22em;color:var(--brasa);margin-top:3px;font-weight:600}
+  .hide{display:none!important}
+  .card{background:#fff;border:1px solid var(--linea);border-radius:16px;padding:22px;margin:22px 0}
+  label{display:block;font-weight:600;font-size:.85rem;margin-bottom:6px}
+  input[type=password]{width:100%;max-width:220px;border:1.5px solid var(--linea);border-radius:10px;padding:12px 14px;font-size:1.1rem;letter-spacing:.3em;text-align:center;background:var(--hueso)}
+  input:focus{outline:none;border-color:var(--brasa)}
+  .btn{background:var(--rojo);color:#fff;border:0;border-radius:10px;padding:12px 20px;font-family:inherit;font-weight:700;font-size:.95rem;cursor:pointer}
+  .btn:hover{background:var(--rojo-d)}
+  .btn.ghost{background:transparent;color:var(--rojo);border:1.5px solid var(--rojo)}
+  .btn.ghost:hover{background:var(--rojo);color:#fff}
+  .err{color:var(--rojo-d);font-size:.85rem;font-weight:600;margin-top:8px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}
+  .kpi{background:#fff;border:1px solid var(--linea);border-radius:14px;padding:15px 14px}
+  .kpi .n{font-family:"Fraunces",Georgia,serif;font-weight:900;font-size:1.7rem;line-height:1;color:var(--rojo)}
+  .kpi .l{font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;color:var(--gris);margin-top:6px;font-weight:600}
+  .head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
+  .head h2{font-family:"Fraunces",Georgia,serif;font-weight:900;font-size:1.2rem;margin:0}
+  .small{font-size:.75rem;color:var(--gris)}
+  .mapbox{background:#fff;border:1px solid var(--linea);border-radius:16px;padding:16px 14px 8px}
+  #distMap{width:100%;height:auto;display:block}
+  .tile-name{font-family:"Inter";font-weight:600;font-size:10px}
+  .tile-count{font-family:"Fraunces",Georgia,serif;font-weight:900;font-size:18px}
+  .legend{display:flex;align-items:center;gap:10px;justify-content:center;font-size:.68rem;color:var(--gris);padding:8px 0 2px}
+  .legend .grad{width:150px;height:10px;border-radius:5px;background:linear-gradient(90deg,var(--hueso),var(--brasa),var(--rojo-d));border:1px solid var(--linea)}
+  .heat{background:#fff;border:1px solid var(--linea);border-radius:16px;padding:6px 4px}
+  .row{display:grid;grid-template-columns:60px 1fr auto;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--linea)}
+  .row:last-child{border-bottom:0}
+  .row .cp{font-family:"Fraunces",Georgia,serif;font-weight:900;font-size:1.05rem}
+  .row .zona{font-size:.75rem;color:var(--gris);margin-bottom:5px}
+  .row .zona .dist{color:var(--brasa);font-weight:600}
+  .row .bar{height:13px;border-radius:7px;background:linear-gradient(90deg,var(--brasa),var(--rojo));min-width:6px}
+  .row .cnt{font-weight:700;text-align:right}
+  .row .cnt small{display:block;font-weight:400;color:var(--gris);font-size:.68rem}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 10px}
+  .empty{text-align:center;color:var(--gris);padding:30px;font-size:.9rem}
+  @media(max-width:620px){.kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="logo">DESHILA<b>CHADOS</b><span class="s">MAPA DE DEMANDA · PANEL</span></div></header>
+
+<div class="wrap">
+
+  <!-- PIN -->
+  <div id="pinbox" class="card">
+    <label for="pin">PIN del personal</label>
+    <input type="password" id="pin" inputmode="numeric" placeholder="••••" autocomplete="off">
+    <div style="margin-top:12px"><button class="btn" id="pinbtn">Entrar</button></div>
+    <p class="err" id="pinmsg"></p>
+  </div>
+
+  <!-- PANEL -->
+  <div id="panel" class="hide">
+    <div class="kpis">
+      <div class="kpi"><div class="n" id="kTotal">0</div><div class="l">Votos confirmados</div></div>
+      <div class="kpi"><div class="n" id="kTopDist">—</div><div class="l">Distrito líder</div></div>
+      <div class="kpi"><div class="n" id="kTopCp">—</div><div class="l">CP líder</div></div>
+      <div class="kpi"><div class="n" id="kRef">0</div><div class="l">Por recomendación</div></div>
+    </div>
+
+    <div class="head"><h2>Calor de demanda por distrito</h2><span class="small">21 distritos · CP→distrito editable</span></div>
+    <div class="mapbox">
+      <svg id="distMap" viewBox="0 0 640 548" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="legend"><span>menos</span><div class="grad"></div><span>más demanda</span></div>
+    </div>
+
+    <div class="head" style="margin-top:22px"><h2>Detalle por código postal</h2><span class="small" id="updated"></span></div>
+    <div class="toolbar">
+      <button class="btn" id="csvBtn">Exportar CSV</button>
+      <button class="btn ghost" id="reloadBtn">Actualizar</button>
+      <button class="btn ghost" id="logout">Salir</button>
+    </div>
+    <div class="heat" id="heat"></div>
+    <p class="small" id="pendingNote" style="margin-top:14px"></p>
+  </div>
+
+</div>
+
+<script>
+var CP2D={'28001':'Salamanca','28002':'Chamartín','28003':'Chamberí','28004':'Centro','28005':'Centro','28006':'Salamanca','28007':'Retiro','28008':'Moncloa-Aravaca','28009':'Retiro','28010':'Chamberí','28011':'Latina','28012':'Centro','28013':'Centro','28014':'Centro','28015':'Chamberí','28016':'Chamartín','28017':'Ciudad Lineal','28018':'Puente de Vallecas','28019':'Carabanchel','28020':'Tetuán','28021':'Villaverde','28022':'San Blas-Canillejas','28023':'Moncloa-Aravaca','28024':'Latina','28025':'Carabanchel','28026':'Usera','28027':'Ciudad Lineal','28028':'Salamanca','28029':'Tetuán','28030':'Moratalaz','28031':'Villa de Vallecas','28032':'Vicálvaro','28033':'Hortaleza','28034':'Fuencarral-El Pardo','28035':'Fuencarral-El Pardo','28036':'Chamartín','28037':'San Blas-Canillejas','28038':'Puente de Vallecas','28039':'Tetuán','28040':'Moncloa-Aravaca','28041':'Villaverde','28042':'Barajas','28043':'Hortaleza','28044':'Latina','28045':'Arganzuela','28046':'Chamartín','28047':'Carabanchel','28048':'Fuencarral-El Pardo','28049':'Fuencarral-El Pardo','28050':'Hortaleza','28051':'Villa de Vallecas','28052':'Villa de Vallecas','28053':'Puente de Vallecas','28054':'Villaverde','28055':'Hortaleza'};
+var DIST=[
+  {d:'Fuencarral-El Pardo',s:'Fuencarral',gx:2,gy:0},{d:'Barajas',s:'Barajas',gx:5,gy:0},
+  {d:'Tetuán',s:'Tetuán',gx:2,gy:1},{d:'Chamartín',s:'Chamartín',gx:3,gy:1},{d:'Hortaleza',s:'Hortaleza',gx:4,gy:1},
+  {d:'Moncloa-Aravaca',s:'Moncloa',gx:0,gy:2},{d:'Chamberí',s:'Chamberí',gx:2,gy:2},{d:'Salamanca',s:'Salamanca',gx:3,gy:2},{d:'Ciudad Lineal',s:'C. Lineal',gx:4,gy:2},{d:'San Blas-Canillejas',s:'San Blas',gx:5,gy:2},
+  {d:'Latina',s:'Latina',gx:1,gy:3},{d:'Centro',s:'Centro',gx:2,gy:3},{d:'Retiro',s:'Retiro',gx:3,gy:3},{d:'Moratalaz',s:'Moratalaz',gx:4,gy:3},{d:'Vicálvaro',s:'Vicálvaro',gx:5,gy:3},
+  {d:'Carabanchel',s:'Carabanchel',gx:1,gy:4},{d:'Arganzuela',s:'Arganzuela',gx:2,gy:4},{d:'Puente de Vallecas',s:'P. Vallecas',gx:3,gy:4},{d:'Villa de Vallecas',s:'V. Vallecas',gx:4,gy:4},
+  {d:'Usera',s:'Usera',gx:2,gy:5},{d:'Villaverde',s:'Villaverde',gx:2,gy:6}
+];
+function $(id){return document.getElementById(id);}
+var PIN='', ROWS=[];
+
+try{var saved=localStorage.getItem('desh_pin'); if(saved){PIN=saved; enter();}}catch(e){}
+$('pinbtn').onclick=function(){ PIN=($('pin').value||'').trim(); if(!PIN)return; enter(); };
+$('pin').addEventListener('keydown',function(e){ if(e.key==='Enter') $('pinbtn').click(); });
+$('logout').onclick=function(){ try{localStorage.removeItem('desh_pin');}catch(e){} location.reload(); };
+$('reloadBtn').onclick=function(){ load(); };
+$('csvBtn').onclick=exportCSV;
+
+function enter(){
+  fetch('/api/zonas',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:PIN,action:'list'})})
+    .then(function(r){
+      if(r.status===401){ $('pinmsg').textContent='PIN incorrecto'; PIN=''; return null; }
+      return r.json();
+    })
+    .then(function(d){
+      if(!d)return;
+      try{localStorage.setItem('desh_pin',PIN);}catch(e){}
+      $('pinbox').classList.add('hide'); $('panel').classList.remove('hide');
+      ROWS=d.rows||[]; render(d.pending||0);
+    })
+    .catch(function(){ $('pinmsg').textContent='Error de conexión'; });
+}
+function load(){
+  fetch('/api/zonas',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:PIN,action:'list'})})
+    .then(function(r){return r.json();})
+    .then(function(d){ ROWS=d.rows||[]; render(d.pending||0); });
+}
+
+function distOf(r){ return r.distrito || CP2D[r.codigo_postal] || 'Sin asignar'; }
+function aggregate(){
+  var m={};
+  ROWS.forEach(function(r){
+    var cp=r.codigo_postal;
+    if(!m[cp])m[cp]={cp:cp,count:0,zonas:{},dist:distOf(r)};
+    m[cp].count++;
+    var z=r.zona_texto; if(z)m[cp].zonas[z]=(m[cp].zonas[z]||0)+1;
+  });
+  var arr=Object.keys(m).map(function(k){var o=m[k];var top='',best=0;for(var z in o.zonas){if(o.zonas[z]>best){best=o.zonas[z];top=z;}}o.topZona=top;return o;});
+  arr.sort(function(a,b){return b.count-a.count||a.cp.localeCompare(b.cp);});
+  return arr;
+}
+function byDistrict(){var m={};ROWS.forEach(function(r){var d=distOf(r);m[d]=(m[d]||0)+1;});return m;}
+function lerp(a,b,t){return Math.round(a+(b-a)*t);}
+function heatColor(t){
+  if(t<=0)return '#FAF6EE';
+  if(t<0.5){var k=t/0.5;return 'rgb('+lerp(239,212,k)+','+lerp(230,136,k)+','+lerp(211,31,k)+')';}
+  var k2=(t-0.5)/0.5;return 'rgb('+lerp(212,140,k2)+','+lerp(136,45,k2)+','+lerp(31,34,k2)+')';
+}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+function render(pending){
+  var arr=aggregate(), total=ROWS.length, dc=byDistrict();
+  var refCount=ROWS.filter(function(r){return r.referred_by;}).length;
+  var topD='—',topDn=0; for(var d in dc){ if(d!=='Sin asignar'&&dc[d]>topDn){topDn=dc[d];topD=d;} }
+  $('kTotal').textContent=total;
+  var short=(DIST.filter(function(x){return x.d===topD;})[0]||{s:topD}).s;
+  $('kTopDist').textContent=topD==='—'?'—':short;
+  $('kTopCp').textContent=arr.length?arr[0].cp:'—';
+  $('kRef').textContent=refCount;
+  $('pendingNote').textContent=pending?('Hay '+pending+' voto'+(pending===1?'':'s')+' sin confirmar (no cuentan hasta el clic del email).'):'';
+
+  var maxDist=1; DIST.forEach(function(x){var c=dc[x.d]||0; if(c>maxDist)maxDist=c;});
+  var W=96,H=66,GX=104,GY=74,OX=8,OY=8,svg='';
+  DIST.forEach(function(x){
+    var c=dc[x.d]||0, t=c/maxDist, fill=heatColor(t), px=OX+x.gx*GX, py=OY+x.gy*GY, txt=c>0?'#fff':'#7A6A55';
+    svg+='<g><title>'+x.d+': '+c+' voto'+(c===1?'':'s')+'</title>'
+      +'<rect x="'+px+'" y="'+py+'" width="'+W+'" height="'+H+'" rx="10" fill="'+fill+'" stroke="#E3D6BD"/>'
+      +'<text class="tile-count" x="'+(px+W/2)+'" y="'+(py+30)+'" text-anchor="middle" fill="'+txt+'">'+c+'</text>'
+      +'<text class="tile-name" x="'+(px+W/2)+'" y="'+(py+48)+'" text-anchor="middle" fill="'+txt+'">'+x.s+'</text></g>';
+  });
+  $('distMap').innerHTML=svg;
+
+  var heat=$('heat');
+  if(!arr.length){ heat.innerHTML='<div class="empty">Aún no hay votos confirmados.</div>'; $('updated').textContent=''; return; }
+  var max=arr[0].count;
+  heat.innerHTML=arr.map(function(o){
+    var pct=Math.round(o.count/total*100), w=Math.max(6,Math.round(o.count/max*100));
+    var zonaTxt=o.topZona?esc(o.topZona):'<span style="opacity:.5">sin barrio</span>';
+    return '<div class="row"><div class="cp">'+o.cp+'</div><div>'
+      +'<div class="zona">'+zonaTxt+' · <span class="dist">'+esc(o.dist)+'</span></div>'
+      +'<div class="bar" style="width:'+w+'%"></div></div>'
+      +'<div class="cnt">'+o.count+'<small>'+pct+'%</small></div></div>';
+  }).join('');
+  var dt=new Date();
+  $('updated').textContent='Actualizado '+dt.toLocaleDateString('es-ES')+' '+dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+}
+
+function exportCSV(){
+  var head='email,codigo_postal,distrito,zona,referido_por,fecha\n';
+  var rows=ROWS.map(function(r){return [r.email,r.codigo_postal,'"'+distOf(r)+'"','"'+String(r.zona_texto||'').replace(/"/g,'""')+'"',r.referred_by||'',r.created_at||''].join(',');}).join('\n');
+  var blob=new Blob([head+rows],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='deshilachados_demanda.csv'; a.click();
+}
+</script>
+</body>
+</html>
